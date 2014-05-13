@@ -4,6 +4,7 @@ pyAPT
 Python interface to Thorlab's APT motion controllers. 
 
 The motion controller can be accessed in two ways:
+
 1. Using `libftdi1` and `pylibftdi`. Under Linux the easiest way to get these is 
 to install `libftdi1` using the package management system, and then install 
 `pylibftdi` into a virtual environment or equivalent.
