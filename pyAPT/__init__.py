@@ -3,12 +3,13 @@ __author__ = "Shuning Bian"
 
 __all__ = ['Message', 'Controller', 'MTS50', 'add_PID', 'clear_PIDs', 'OutOfRangeError']
 
-from pyAPT import message, controller, mts50
+from pyAPT import message, controller, mts50, tdc001
 
 Message = message.Message
 Controller = controller.Controller
 ControllerSerial = controller.ControllerSerial
 MTS50 = mts50.MTS50
+TDC001 = tdc001.TDC001
 OutOfRangeError = controller.OutOfRangeError
 
 try:
