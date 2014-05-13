@@ -9,11 +9,12 @@ The motion controller can be accessed in two ways:
 to install `libftdi1` using the package management system, and then install 
 `pylibftdi` into a virtual environment or equivalent.
 
-2. Serial communication using pySerial. You can use these in Windows by going
-the device manager, selecting "Universal Serial Bus controllers", right clicking
-on the desired "APT USB Device" and selecting "properties". Under the Advanced
-tab check the box labeled "Load VCP". Virtual com port drivers are described 
-here: [FTDI Chip](http://www.ftdichip.com/Drivers/VCP.htm).
+2. Serial communication using [pySerial](http://pyserial.sourceforge.net/) and 
+virtual com ports. You can use these in Windows by going to the device manager, 
+selecting "Universal Serial Bus controllers", right clicking on the desired 
+"APT USB Device" and selecting "properties". Under the Advanced tab check the 
+box labeled "Load VCP". Virtual com port drivers are described here: 
+[FTDI Chip](http://www.ftdichip.com/Drivers/VCP.htm).
 
 Note on stage limits
 ====================
