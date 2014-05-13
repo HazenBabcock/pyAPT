@@ -1,13 +1,18 @@
 pyAPT
 =====
 
-Python interface to Thorlab's APT motion controllers. Depends on `libftdi1` and
-`pylibftdi`. Under Linux the easiest way to get these is to install `libftdi1`
-using the package management system, and then install `pylibftdi` into a virtual
-environment or equivalent.
+Python interface to Thorlab's APT motion controllers. 
 
-Development is ongoing, and I will be adding functionality as I need them in
-the course of my DPhil.
+The motion controller can be accessed in two ways:
+1. Using `libftdi1` and `pylibftdi`. Under Linux the easiest way to get these is 
+to install `libftdi1` using the package management system, and then install 
+`pylibftdi` into a virtual environment or equivalent.
+
+2. Serial communication using pySerial. You can use these in Windows by going
+the device manager, selecting "Universal Serial Bus controllers", right clicking
+on the desired "APT USB Device" and selecting "properties". Under the Advanced
+tab check the box labeled "Load VCP". Virtual com port drivers are described 
+here: [FTDI Chip](http://www.ftdichip.com/Drivers/VCP.htm).
 
 Note on stage limits
 ====================
