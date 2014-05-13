@@ -1,7 +1,7 @@
 """
 Simple class which encapsulate an APT controller
 """
-import pylibftdi
+
 import time
 import struct as st
 
@@ -13,39 +13,16 @@ class OutOfRangeError(Exception):
     val = '%f requested, but allowed range is %.2f..%.2f'%(requested, allowed[0], allowed[1])
     super(OutOfRangeError, self).__init__(val)
 
-class Controller(object):
+class ControllerBase(object):
+  """
+  Base class for controllers.
+  """
+
   def __init__(self, serial_number=None, label=None):
-    super(Controller, self).__init__()
-
-    # this takes up to 2-3s:
-    dev = pylibftdi.Device(mode='b', device_id=serial_number)
-    dev.baudrate = 115200
-
-    def _checked_c(ret):
-      if not ret == 0:
-        raise Exception(dev.ftdi_fn.ftdi_get_error_string())
-
-    _checked_c(dev.ftdi_fn.ftdi_set_line_property(  8,   # number of bits
-                                                    1,   # number of stop bits
-                                                    0   # no parity
-                                                    ))
-    time.sleep(50.0/1000)
-
-    dev.flush(pylibftdi.FLUSH_BOTH)
-
-    time.sleep(50.0/1000)
-
-    # skipping reset part since it looks like pylibftdi does it already
-
-    # this is pulled from ftdi.h
-    SIO_RTS_CTS_HS = (0x1 << 8)
-    _checked_c(dev.ftdi_fn.ftdi_setflowctrl(SIO_RTS_CTS_HS))
-
-    _checked_c(dev.ftdi_fn.ftdi_setrts(1))
+    super(ControllerBase, self).__init__()
 
     self.serial_number = serial_number
     self.label = label
-    self._device = dev
 
     # some conservative limits
     # velocity is in mm/s
@@ -534,6 +511,60 @@ class Controller(object):
 
   def __repr__(self):
     return 'Controller(serial=%s, device=%s)'%(self.serial_number, self._device)
+
+class Controller(ControllerBase):
+  """
+  pylibftdi based controllers.
+  """
+  def __init__(self, serial_number=None, label=None):
+
+    import pylibftdi
+
+    # this takes up to 2-3s:
+    dev = pylibftdi.Device(mode='b', device_id=serial_number)
+    dev.baudrate = 115200
+
+    def _checked_c(ret):
+      if not ret == 0:
+        raise Exception(dev.ftdi_fn.ftdi_get_error_string())
+
+    _checked_c(dev.ftdi_fn.ftdi_set_line_property(  8,   # number of bits
+                                                    1,   # number of stop bits
+                                                    0   # no parity
+                                                    ))
+    time.sleep(50.0/1000)
+
+    dev.flush(pylibftdi.FLUSH_BOTH)
+
+    time.sleep(50.0/1000)
+
+    # skipping reset part since it looks like pylibftdi does it already
+
+    # this is pulled from ftdi.h
+    SIO_RTS_CTS_HS = (0x1 << 8)
+    _checked_c(dev.ftdi_fn.ftdi_setflowctrl(SIO_RTS_CTS_HS))
+
+    _checked_c(dev.ftdi_fn.ftdi_setrts(1))
+
+    self._device = dev
+    super(ControllerBase, self).__init__(serial_number, label)
+
+class ControllerSerial(ControllerBase):
+  """
+  pyserial based controllers.
+  """
+  def __init__(self, serial_port, label=None):
+
+    import serial
+
+    dev = serial.Serial(serial_port, 115200, timeout = 1)
+
+    time.sleep(50.0/1000)
+    dev.flush()
+    time.sleep(50.0/1000)
+
+    self._device = dev
+    super(ControllerSerial, self).__init__(0, label)
 
 class ControllerStatus(object):
   """
